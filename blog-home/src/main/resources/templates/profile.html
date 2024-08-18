@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            color: #555;
+            margin: 10px 0;
+        }
+        img {
+            border-radius: 8px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        async function fetchProfile() {
+            try {
+                const response = await fetch('/profile', {
+                    method: 'POST',  // POST 요청으로 변경
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                const userProfile = await response.json();
+
+                document.getElementById('username').textContent = userProfile.username;
+                document.getElementById('email').textContent = userProfile.email;
+
+                // 프로필 사진 URL 처리
+                let profilePictureUrl = userProfile.profilePictureUrl || 'default-profile.png';
+                console.log('Before:', profilePictureUrl);
+
+                // 파일 경로 조정
+                if (profilePictureUrl.startsWith('/files/profile-picture/')) {
+                    profilePictureUrl = profilePictureUrl.replace('/files/profile-picture//uploads', '/uploads');
+                }
+
+                console.log('After:', profilePictureUrl);
+
+                // 이미지 요소에 URL 설정
+                document.getElementById('profilePictureUrl').src = profilePictureUrl;
+                document.getElementById('usernameField').value = userProfile.username;
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+            }
+        }
+
+        async function uploadProfilePicture(event) {
+            event.preventDefault();
+
+            // FormData 객체 생성
+            const formData = new FormData(event.target);
+
+            try {
+                const response = await fetch('/profile/upload', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                });
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                // 업로드 성공 후 프로필 데이터 새로 가져오기
+                await fetchProfile();
+            } catch (error) {
+                console.error('Error uploading profile picture:', error);
+            }
+        }
+
+        window.onload = fetchProfile;
+    </script>
+</head>
+<body>
+<div class="container">
+    <h1>User Profile</h1>
+    <p><strong>Username:</strong> <span id="username"></span></p>
+    <p><strong>Email:</strong> <span id="email"></span></p>
+    <p><strong>Profile Picture:</strong> <img id="profilePictureUrl" alt="Profile Picture" width="150" /></p>
+
+    <!-- 프로필 사진 업로드 폼 -->
+    <form onsubmit="uploadProfilePicture(event)">
+        <label for="file">Upload new profile picture:</label>
+        <input type="file" id="file" name="file" accept="image/*" required />
+        <input type="hidden" id="usernameField" name="username" value="" /> <!-- 숨겨진 입력 필드 추가 -->
+        <button type="submit">Upload</button>
+    </form>
+</div>
+</body>
+</html>
