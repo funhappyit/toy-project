@@ -5,6 +5,7 @@
 
 1. Users 테이블
 사용자 정보를 저장하는 테이블입니다.
+```sql
 CREATE TABLE Users (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255) NOT NULL UNIQUE,
@@ -13,9 +14,10 @@ CREATE TABLE Users (
   profile_picture_url VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-
-2. Posts 테이블
+```
+3. Posts 테이블
 게시물 정보를 저장하는 테이블입니다.
+```sql
 CREATE TABLE Posts (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
@@ -27,8 +29,10 @@ CREATE TABLE Posts (
   FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
   FOREIGN KEY (category_id) REFERENCES Categories(id) ON DELETE SET NULL
 );
-3. Comments 테이블
+```
+5. Comments 테이블
 댓글 정보를 저장하는 테이블입니다.
+```sql
 CREATE TABLE Comments (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   content TEXT NOT NULL,
@@ -39,21 +43,27 @@ CREATE TABLE Comments (
   FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
   FOREIGN KEY (post_id) REFERENCES Posts(id) ON DELETE CASCADE
 );
-4. Categories 테이블
+```
+7. Categories 테이블
 카테고리 정보를 저장하는 테이블입니다.
+```sql
 CREATE TABLE Categories (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL UNIQUE,
   description TEXT
 );
-5. Tags 테이블
+```
+9. Tags 테이블
 태그 정보를 저장하는 테이블입니다.
+```sql
 CREATE TABLE Tags (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL UNIQUE
 );
-6. Post_Tags 테이블
+```
+11. Post_Tags 테이블
 게시물과 태그 간의 다대다 관계를 관리하는 조인 테이블입니다.
+```sql
 CREATE TABLE Post_Tags (
   post_id BIGINT NOT NULL,
   tag_id BIGINT NOT NULL,
@@ -61,8 +71,10 @@ CREATE TABLE Post_Tags (
   FOREIGN KEY (post_id) REFERENCES Posts(id) ON DELETE CASCADE,
   FOREIGN KEY (tag_id) REFERENCES Tags(id) ON DELETE CASCADE
 );
-7. Likes 테이블
+```
+13. Likes 테이블
 사용자가 게시물을 좋아요한 정보를 저장하는 테이블입니다.
+```sql
 CREATE TABLE Likes (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   user_id BIGINT NOT NULL,
@@ -71,6 +83,7 @@ CREATE TABLE Likes (
   FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
   FOREIGN KEY (post_id) REFERENCES Posts(id) ON DELETE CASCADE
 );
+```
 Users 테이블: 사용자의 기본 정보(이름, 이메일, 비밀번호, 프로필 사진 URL 등)를 저장합니다. 이 테이블은 MySQL에서 사용자 계정을 관리하는 기본적인 테이블로 활용됩니다.
 
 Posts 테이블: 사용자들이 작성한 게시물의 제목과 내용을 저장합니다. 게시물은 작성자(user_id)와 카테고리(category_id)를 참조합니다.
