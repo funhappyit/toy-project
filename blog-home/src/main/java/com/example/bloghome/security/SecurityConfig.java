@@ -10,15 +10,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig{
 	private final UserDetailsService userDetailsService;
+	private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
-	public SecurityConfig(UserDetailsService userDetailsService) {
+	public SecurityConfig(UserDetailsService userDetailsService, AuthenticationSuccessHandler authenticationSuccessHandler) {
 		this.userDetailsService = userDetailsService;
+		this.authenticationSuccessHandler = authenticationSuccessHandler;
 	}
 
 	@Bean
@@ -35,7 +37,7 @@ public class SecurityConfig{
 			.formLogin(formLogin ->
 				formLogin
 					.loginPage("/login")  // 사용자 정의 로그인 페이지 설정
-					.defaultSuccessUrl("/profile", true)
+					.successHandler(authenticationSuccessHandler)
 					.permitAll()  // 로그인 페이지는 누구나 접근 가능
 			)
 			.logout(logout ->

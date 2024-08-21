@@ -3,6 +3,7 @@ package com.example.bloghome.controller;
 import com.example.bloghome.dto.UserProfileDTO;
 import com.example.bloghome.model.User;
 import com.example.bloghome.repository.UserRepository;
+import com.example.bloghome.service.UserProfileCacheService;
 import com.example.bloghome.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +21,14 @@ import java.io.IOException;
 public class UserProfileController {
 
 	private final UserRepository userRepository;
-	private final UserService userService;
+	private final UserProfileCacheService userProfileCacheService;
+
+
+
 	@Autowired
-	public UserProfileController(UserRepository userRepository, UserService userService) {
+	public UserProfileController(UserRepository userRepository, UserProfileCacheService userProfileCacheService) {
 		this.userRepository = userRepository;
-		this.userService = userService;
+		this.userProfileCacheService = userProfileCacheService;
 	}
 	@GetMapping
 	public String showSignupForm() {
@@ -33,16 +37,27 @@ public class UserProfileController {
 
 	@PostMapping
 	public ResponseEntity<UserProfileDTO> getProfile(@AuthenticationPrincipal UserDetails userDetails) {
-		User user = userRepository.findByUsername(userDetails.getUsername());
+		String username = userDetails.getUsername();
+
+		// Redis 캐시에서 프로필 조회
+		UserProfileDTO cachedProfile = userProfileCacheService.getCachedUserProfile(username);
+		if (cachedProfile != null) {
+			return ResponseEntity.ok(cachedProfile);
+		}
+
+		// 캐시가 없는 경우, 데이터베이스에서 조회
+		User user = userRepository.findByUsername(username);
 		if (user == null) {
 			return ResponseEntity.notFound().build();
 		}
 
-		String profilePictureUrl = user.getProfilePictureUrl() != null
-				? "/files/profile-picture/" + user.getProfilePictureUrl()
-				: "/files/profile-picture/default-profile.png";
-
+		// 사용자 프로필 DTO 생성
+		String profilePictureUrl = user.getProfilePictureUrl();
 		UserProfileDTO userProfileDTO = new UserProfileDTO(user.getUsername(), user.getEmail(), profilePictureUrl);
+
+		// Redis 캐시에 프로필 저장
+		userProfileCacheService.cacheUserProfile(username, userProfileDTO);
+
 		return ResponseEntity.ok(userProfileDTO);
 	}
 }

@@ -1,5 +1,4 @@
-targetCompatibility = JavaVersion.VERSION_16
-sourceCompatibility = JavaVersion.VERSION_16
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.2'
@@ -24,6 +23,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security' // Spring Security 추가
+    // Spring Boot Starter Data Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // Lettuce (default Redis client)
+   // implementation 'io.lettuce.core:lettuce-core:6.1.0'    // 적절한 최신 버전으로 설정
+    // Lombok 의존성 추가
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

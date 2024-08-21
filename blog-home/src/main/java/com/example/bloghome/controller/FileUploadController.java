@@ -28,7 +28,7 @@ public class FileUploadController {
     public RedirectView uploadProfilePicture(@RequestParam("username") String username,@RequestParam("file") MultipartFile file) throws IOException {
         User user = userRepository.findByUsername(username);
         // 파일 저장 경로
-        Path uploadPath =  Paths.get("/Users/han-yugyeong/Desktop/study/uploads");
+        Path uploadPath =  Paths.get("C:/workspace(2022Intellj)/toy-project3/src/main/java/resources/static/uploads/");
 
 
         // 디렉토리 존재 여부 확인 및 생성

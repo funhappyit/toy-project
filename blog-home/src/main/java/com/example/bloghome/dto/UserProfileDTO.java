@@ -1,10 +1,16 @@
 package com.example.bloghome.dto;
 
-public class UserProfileDTO {
+import java.io.Serializable;
+
+public class UserProfileDTO  implements Serializable {
+
+    private static final long serialVersionUID = 1L;  // 직렬화 버전 UID 추가
     private String username;
     private String email;
     private String profilePictureUrl;
-
+    // 기본 생성자 추가
+    public UserProfileDTO() {
+    }
     public UserProfileDTO(String username, String email, String profilePictureUrl) {
         this.username = username;
         this.email = email;

@@ -13,6 +13,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:/Users/han-yugyeong/Desktop/study/uploads/");
+                .addResourceLocations("file:C:/workspace(2022Intellj)/toy-project3/src/main/java/resources/static/uploads/");
     }
 }
