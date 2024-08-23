@@ -1,0 +1,32 @@
+<!-- src/main/resources/templates/layout.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Application</title>
+   <style>
+
+   </style>
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/about}">About</a></li>
+            <li><a th:href="@{/contact}">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <div th:fragment="content">
+
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2024 My Application</p>
+</footer>
+</body>
+</html>

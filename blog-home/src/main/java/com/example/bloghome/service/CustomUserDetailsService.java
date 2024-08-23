@@ -1,20 +1,19 @@
-package com.example.bloghome.security;
+package com.example.bloghome.service;
 
-import com.example.bloghome.model.User;
-import com.example.bloghome.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.example.bloghome.model.User;
+import com.example.bloghome.repository.UserRepository;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
+
 	private final UserRepository userRepository;
 
-	@Autowired
-	public UserDetailsServiceImpl(UserRepository userRepository) {
+	public CustomUserDetailsService(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 
@@ -24,11 +23,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found");
 		}
-
-		org.springframework.security.core.userdetails.User.UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(username);
-		builder.password(user.getPassword());
-		builder.roles(user.getRole());
-
-		return builder.build();
+		return user; // User는 UserDetails를 구현
 	}
 }

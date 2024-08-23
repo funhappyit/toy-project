@@ -3,7 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <title>Post List</title>
-  <link rel="stylesheet" href="/css/style.css"> <!-- CSS 파일 링크 -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 20px;
+      background-color: #f4f4f9;
+    }
+
+    /* 제목 스타일 */
+    h1 {
+      text-align: center;
+      color: #333;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    /* 테이블 스타일 */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    thead {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tbody tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* 링크 스타일 */
+    a {
+      color: #4CAF50;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* 테이블 셀 안의 제목 링크 강조 */
+    td a {
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    /* 페이지 너비 조정 */
+    body {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+  </style>
 </head>
 <body>
 
@@ -21,7 +85,7 @@
   <tbody>
   <tr th:each="post : ${posts}">
     <td th:text="${post.id}"></td>
-    <td th:text="${post.title}"></td>
+    <td><a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a></td>
     <td th:text="${post.content}"></td>
     <td th:text="${post.createdAt}"></td>
   </tr>

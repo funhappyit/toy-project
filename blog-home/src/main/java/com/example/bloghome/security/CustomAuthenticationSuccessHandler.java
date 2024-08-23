@@ -31,6 +31,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 		request.getSession().setAttribute("loggedInUser", user);
 
 		// 기본 로그인 성공 페이지로 리다이렉트
-		response.sendRedirect("/profile");
+		response.sendRedirect("/posts");
 	}
 }

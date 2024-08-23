@@ -1,5 +1,11 @@
 package com.example.bloghome.model;
 
+import java.util.Collection;
+import java.util.Collections;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +17,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "Users")
-public class User {
+public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,6 +65,26 @@ public class User {
 		return username;
 	}
 
+	@Override
+	public boolean isAccountNonExpired() {
+		return UserDetails.super.isAccountNonExpired();
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return UserDetails.super.isAccountNonLocked();
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return UserDetails.super.isCredentialsNonExpired();
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return UserDetails.super.isEnabled();
+	}
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -70,6 +96,11 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return Collections.emptyList(); // 필요 시 권한 추가
 	}
 
 	// Getter and setter for password
